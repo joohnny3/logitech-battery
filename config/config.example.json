@@ -1,0 +1,6 @@
+{
+  "refresh_seconds": 60,
+  "low_battery_threshold": 20,
+  "enable_low_battery_notification": true,
+  "device_name_keywords": ["Logitech", "PRO", "SUPERLIGHT", "G Pro"]
+}
