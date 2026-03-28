@@ -2,9 +2,14 @@
 import sys
 
 from app.bootstrap import Application
+from app.single_instance import acquire
 
 
 def main() -> None:
+    if not acquire():
+        print("Mouse Battery Monitor 已在執行中，不可重複啟動。")
+        sys.exit(0)
+
     try:
         app = Application()
         app.run()
