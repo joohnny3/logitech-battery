@@ -12,6 +12,9 @@ _DEFAULTS = {
     "low_battery_threshold": 20,
     "enable_low_battery_notification": True,
     "device_name_keywords": ["Logitech"],
+    "elk_log_path": None,
+    "elk_service_name": "mouse-battery",
+    "elk_environment": "development",
 }
 
 
@@ -21,6 +24,9 @@ class AppConfig:
     low_battery_threshold: int = _DEFAULTS["low_battery_threshold"]
     enable_low_battery_notification: bool = _DEFAULTS["enable_low_battery_notification"]
     device_name_keywords: list[str] = field(default_factory=lambda: list(_DEFAULTS["device_name_keywords"]))
+    elk_log_path: str | None = _DEFAULTS["elk_log_path"]
+    elk_service_name: str = _DEFAULTS["elk_service_name"]
+    elk_environment: str = _DEFAULTS["elk_environment"]
 
     @classmethod
     def load(cls, path: Path | None = None) -> "AppConfig":
@@ -36,6 +42,9 @@ class AppConfig:
             low_battery_threshold=raw.get("low_battery_threshold", _DEFAULTS["low_battery_threshold"]),
             enable_low_battery_notification=raw.get("enable_low_battery_notification", _DEFAULTS["enable_low_battery_notification"]),
             device_name_keywords=raw.get("device_name_keywords", list(_DEFAULTS["device_name_keywords"])),
+            elk_log_path=raw.get("elk_log_path", _DEFAULTS["elk_log_path"]),
+            elk_service_name=raw.get("elk_service_name", _DEFAULTS["elk_service_name"]),
+            elk_environment=raw.get("elk_environment", _DEFAULTS["elk_environment"]),
         )
         config._validate()
         return config

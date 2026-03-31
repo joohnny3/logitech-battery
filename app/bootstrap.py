@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 
 from app.config import AppConfig
-from app.logger import setup_logging
+from app.logger import setup_logging, setup_elk_logging
 from app.notifier import Notifier
 from app.services.battery_reader import read_battery
 from app.services.scheduler import Scheduler
@@ -23,6 +23,13 @@ class Application:
                      self._config.refresh_seconds,
                      self._config.low_battery_threshold,
                      self._config.device_name_keywords)
+
+        if self._config.elk_log_path:
+            setup_elk_logging(
+                elk_log_path=self._config.elk_log_path,
+                service_name=self._config.elk_service_name,
+                environment=self._config.elk_environment,
+            )
 
         self._notifier = Notifier(
             threshold=self._config.low_battery_threshold,
