@@ -1,7 +1,8 @@
 """Tests for BatteryStatus model."""
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.models.battery_status import BatteryStatus, BatteryStatusType, ChargingState
+from app.time_utils import TAIWAN_TZ
 
 
 class TestBatteryStatus:
@@ -28,6 +29,16 @@ class TestBatteryStatus:
         now = datetime.now()
         s = BatteryStatus(device_name="G Pro", level=50, status=BatteryStatusType.SUCCESS, updated_at=now)
         assert now.strftime("%H:%M:%S") in s.tooltip
+
+    def test_default_updated_at_uses_taiwan_timezone(self):
+        s = BatteryStatus()
+        assert s.updated_at.tzinfo == TAIWAN_TZ
+        assert s.updated_at.utcoffset().total_seconds() == 8 * 60 * 60
+
+    def test_tooltip_converts_utc_time_to_taiwan(self):
+        utc_time = datetime(2026, 4, 1, 4, 5, 6, tzinfo=timezone.utc)
+        s = BatteryStatus(device_name="G Pro", level=50, status=BatteryStatusType.SUCCESS, updated_at=utc_time)
+        assert "12:05:06" in s.tooltip
 
     def test_charging_display(self):
         s = BatteryStatus(device_name="G Pro", level=80, charging=True,

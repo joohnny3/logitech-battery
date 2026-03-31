@@ -14,10 +14,10 @@ from __future__ import annotations
 import logging
 import struct
 import time
-from datetime import datetime
 
 from app.models.battery_status import BatteryStatus, BatteryStatusType, ChargingState
 from app.services.connection import DeviceConnection, discover_connections
+from app.time_utils import taiwan_now
 
 logger = logging.getLogger(__name__)
 
@@ -266,7 +266,7 @@ def read_battery(conn: DeviceConnection | None = None) -> BatteryStatus:
     Returns:
         BatteryStatus with the current battery information.
     """
-    now = datetime.now()
+    now = taiwan_now()
 
     # Auto-discover if no connection provided
     if conn is None:
@@ -306,7 +306,7 @@ def read_battery(conn: DeviceConnection | None = None) -> BatteryStatus:
 
 def _read_battery_from_connection(conn: DeviceConnection) -> BatteryStatus:
     """Read battery from an already-opened connection."""
-    now = datetime.now()
+    now = taiwan_now()
     try:
         conn.prepare()
 

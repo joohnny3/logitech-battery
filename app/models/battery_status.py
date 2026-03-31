@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
+from app.time_utils import taiwan_now, to_taiwan_time
+
 
 class BatteryStatusType(Enum):
     SUCCESS = "success"
@@ -24,7 +26,7 @@ class BatteryStatus:
     charging: bool = False
     charging_state: ChargingState = ChargingState.DISCHARGING
     raw_text: str = ""
-    updated_at: datetime = field(default_factory=datetime.now)
+    updated_at: datetime = field(default_factory=taiwan_now)
     status: BatteryStatusType = BatteryStatusType.UNAVAILABLE
 
     @property
@@ -43,5 +45,5 @@ class BatteryStatus:
 
     @property
     def tooltip(self) -> str:
-        ts = self.updated_at.strftime("%H:%M:%S")
+        ts = to_taiwan_time(self.updated_at).strftime("%H:%M:%S")
         return f"{self.display_text}\n更新時間: {ts}"
